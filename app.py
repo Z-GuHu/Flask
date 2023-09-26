@@ -53,6 +53,7 @@ def test_url_for():
     # 下面这个调用传入了多余的关键字参数，它们会被作为查询字符串附加到 URL 后面。
     print(url_for('test_url_for', num=2))  # 输出：/test?num=2
     return 'Test page'
+# 提示 在 Python 脚本里，url_for() 函数需要从 flask 包中导入，而在模板中则可以直接使用，因为 Flask 把一些常用的函数和对象添加到了模板上下文（环境）里。
 
 
 @app.route('/user/<name>')  #路径中添加变量
