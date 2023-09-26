@@ -2,6 +2,7 @@ import os
 import sys
 import click
 
+
 from flask import Flask, render_template
 from flask import url_for
 from markupsafe import escape
@@ -31,7 +32,7 @@ db = SQLAlchemy(app)  # 初始化扩展，传入程序实例 app
 def index():
     user = User.query.first()  # 读取用户记录
     movies = Movie.query.all()  # 读取所有电影记录
-    return render_template('index.html', user=user, movies=movies)
+    return render_template('index.html',  movies=movies)
 # <!--包含变量和运算逻辑的 HTML 或其他格式的文本叫做模板-->
 # <!--执行这些变量替换和逻辑计算工作的过程被称为渲染-->
 # <!--Flask 会从程序实例所在模块同级目录的 templates 文件夹中寻找模板，-->
@@ -158,7 +159,6 @@ class Movie(db.Model):  # 表名将会是 movie
 # >>> db.session.delete(movie)  # 使用 db.session.delete() 方法删除记录，传入模型实例
 # >>> db.session.commit()  # 提交改动
 
-
 #把上边在flask shell执行的命令转换成终端命令，一次性实现数据的增加。
 @app.cli.command()
 def forge():
@@ -205,3 +205,16 @@ def initdb(drop):
 # flask initdb --drop  使用 --drop选项删除表格并重新创建
 
 
+#错误处理函数
+@app.errorhandler(404)  # 传入要处理的错误代码
+def page_not_found(e):  # 接受异常对象作为参数
+    user = User.query.first()
+    #return render_template('404.html', user=user), 404  # 返回模板和状态码
+    return render_template('404.html'), 404#有了模板上下文处理函数
+
+#模板上下文处理函数
+@app.context_processor
+def inject_user():  # 函数名可以随意修改
+    user = User.query.first()
+    return dict(user=user)  # 需要返回字典，等同于 return {'user': user}
+# 这个函数返回的变量（以字典键值对的形式）将会统一注入到每一个模板的上下文环境中，因此可以直接在模板中使用。
