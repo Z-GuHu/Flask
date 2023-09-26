@@ -17,7 +17,6 @@
     </li>
     {% endfor %}
 </ul>
-<p>{{ movies|length }} Titles</p>
 {% if current_user.is_authenticated %}
 <form method="post">
     Name <input type="text" name="title" autocomplete="off" required>
